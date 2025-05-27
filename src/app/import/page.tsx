@@ -39,8 +39,8 @@ export default function ImportPage() {
             <p className="font-medium">CSV Format Example:</p>
             <pre className="bg-muted p-4 rounded-md mt-2 text-sm overflow-x-auto">
               Company Name,Total Funding,Current Revenue,Investor List,Market Segment,Stage
-              Company A,25000000,5000000,"Draper, Sequoia",SaaS,Series B
-              Company B,12000000,2500000,"Draper, a16z",Fintech,Series A
+              Company A,25000000,5000000,&quot;Draper, Sequoia&quot;,SaaS,Series B
+              Company B,12000000,2500000,&quot;Draper, a16z&quot;,Fintech,Series A
             </pre>
           </div>
 

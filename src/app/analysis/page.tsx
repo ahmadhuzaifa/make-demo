@@ -49,7 +49,7 @@ export default function AnalysisPage() {
               onClick={handleAnalysis}
               disabled={!query.trim() || !selectedCompany.trim() || isAnalyzing}
             >
-              {isAnalyzing ? 'Analyzing...' : 'Get Analysis'}
+              {isAnalyzing ? "Analyzing..." : "Get Analysis"}
             </Button>
           </div>
         </Card>
@@ -59,7 +59,7 @@ export default function AnalysisPage() {
             <h3 className="text-lg font-medium mb-4">Example Questions</h3>
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">• Should we invest more in [Company]?</p>
-              <p className="text-sm text-muted-foreground">• What's the market saying about [Company]?</p>
+              <p className="text-sm text-muted-foreground">• What&apos;s the market saying about [Company]?</p>
               <p className="text-sm text-muted-foreground">• How does [Company] compare to competitors?</p>
               <p className="text-sm text-muted-foreground">• What are the key risks for [Company]?</p>
               <p className="text-sm text-muted-foreground">• Will their revenue grow in the next year?</p>
