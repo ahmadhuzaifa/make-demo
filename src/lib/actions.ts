@@ -3,6 +3,58 @@
 import { prisma } from './prisma';
 import { revalidatePath } from 'next/cache';
 
+interface CreateCompanyData {
+  name: string;
+  totalFunding: number;
+  currentRevenue: number;
+  marketSegment: string;
+  stage: string;
+  investorList?: string;
+  location?: string;
+  website?: string;
+  description?: string;
+}
+
+interface UpdateCompanyData {
+  id: string;
+  name: string;
+  totalFunding: number;
+  currentRevenue: number;
+  marketSegment: string;
+  stage: string;
+  revenueGrowth?: number | null;
+}
+
+interface CompanyUpdateData {
+  title: string;
+  description: string;
+  companyId: string;
+}
+
+interface ReportData {
+  title: string;
+  content: string;
+  type: string;
+  format: string;
+  companyId: string;
+}
+
+interface AIAnalysisData {
+  query: string;
+  response: string;
+  companyName: string;
+  metadata?: Record<string, string | number | boolean | null>;
+}
+
+interface CSVCompanyData {
+  name: string;
+  totalFunding: string;
+  currentRevenue: string;
+  marketSegment: string;
+  stage: string;
+  investorList?: string;
+}
+
 export async function getCompanies() {
   try {
     const companies = await prisma.company.findMany({
@@ -34,6 +86,7 @@ export async function getCompany(id: string) {
       where: { id },
       include: {
         updates: true,
+        metrics: true,
       },
     });
     if (!company) throw new Error('Company not found');
@@ -47,7 +100,7 @@ export async function getCompany(id: string) {
   }
 }
 
-export async function createCompany(data: any) {
+export async function createCompany(data: CreateCompanyData) {
   try {
     // Validate required fields
     if (!data.name || !data.totalFunding || !data.currentRevenue || !data.marketSegment || !data.stage) {
@@ -89,7 +142,7 @@ export async function createCompany(data: any) {
   }
 }
 
-export async function updateCompany(data: any) {
+export async function updateCompany(data: UpdateCompanyData) {
   try {
     if (!data.id) throw new Error('Missing company ID');
     const updated = await prisma.company.update({
@@ -120,7 +173,7 @@ export async function deleteCompany(id: string) {
   }
 }
 
-export async function createCompanyUpdate(data: any) {
+export async function createCompanyUpdate(data: CompanyUpdateData) {
   try {
     if (!data.title || !data.description || !data.companyId) {
       throw new Error('Missing required fields for company update');
@@ -144,7 +197,7 @@ export async function createCompanyUpdate(data: any) {
   }
 }
 
-export async function importCompaniesFromCSV(companies: any[]) {
+export async function importCompaniesFromCSV(companies: CSVCompanyData[]) {
   try {
     if (!Array.isArray(companies) || companies.length === 0) {
       throw new Error('No valid companies data provided');
@@ -183,7 +236,7 @@ export async function importCompaniesFromCSV(companies: any[]) {
   }
 }
 
-export async function createReport(data: any) {
+export async function createReport(data: ReportData) {
   try {
     if (!data.title || !data.content || !data.type || !data.format) {
       throw new Error('Missing required fields for report');
@@ -209,7 +262,7 @@ export async function createReport(data: any) {
   }
 }
 
-export async function saveAIAnalysis(data: any) {
+export async function saveAIAnalysis(data: AIAnalysisData) {
   try {
     if (!data.query || !data.response) {
       throw new Error('Missing required fields for AI analysis');

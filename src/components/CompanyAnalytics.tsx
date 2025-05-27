@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import { Card } from '@tremor/react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +9,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -26,12 +25,12 @@ ChartJS.register(
 export function CompanyAnalytics() {
   // Example data - this would come from your CSV upload
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     datasets: [
       {
-        label: 'Portfolio Revenue Growth',
+        label: "Portfolio Revenue Growth",
         data: [0, 10, 15, 22, 30, 45],
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: "rgb(75, 192, 192)",
         tension: 0.1,
       },
     ],
@@ -41,11 +40,11 @@ export function CompanyAnalytics() {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
       },
       title: {
         display: true,
-        text: 'Portfolio Performance',
+        text: "Portfolio Performance",
       },
     },
   };
@@ -54,15 +53,21 @@ export function CompanyAnalytics() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-lg bg-primary/10">
-          <h3 className="font-medium text-sm text-muted-foreground">Total Portfolio Value</h3>
+          <h3 className="font-medium text-sm text-muted-foreground">
+            Total Portfolio Value
+          </h3>
           <p className="text-2xl font-bold">$1.2B</p>
         </div>
         <div className="p-4 rounded-lg bg-primary/10">
-          <h3 className="font-medium text-sm text-muted-foreground">Avg. Revenue Growth</h3>
+          <h3 className="font-medium text-sm text-muted-foreground">
+            Avg. Revenue Growth
+          </h3>
           <p className="text-2xl font-bold">+32%</p>
         </div>
         <div className="p-4 rounded-lg bg-primary/10">
-          <h3 className="font-medium text-sm text-muted-foreground">Active Investments</h3>
+          <h3 className="font-medium text-sm text-muted-foreground">
+            Active Investments
+          </h3>
           <p className="text-2xl font-bold">24</p>
         </div>
       </div>

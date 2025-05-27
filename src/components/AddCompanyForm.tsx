@@ -1,69 +1,79 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { createCompany } from '@/lib/actions';
-import { useToast } from '@/components/ui/use-toast';
-import { z } from 'zod';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { createCompany } from "@/lib/actions";
+import { useToast } from "@/components/ui/use-toast";
+import { z } from "zod";
 
 interface AddCompanyFormProps {
   onSuccess?: () => void;
 }
 
 const companySchema = z.object({
-  name: z.string().min(1, 'Company name is required'),
-  totalFunding: z.string().min(1, 'Total funding is required')
-    .refine((val) => !isNaN(Number(val)), 'Must be a valid number'),
-  currentRevenue: z.string().min(1, 'Current revenue is required')
-    .refine((val) => !isNaN(Number(val)), 'Must be a valid number'),
-  marketSegment: z.string().min(1, 'Market segment is required'),
-  stage: z.string().min(1, 'Stage is required'),
+  name: z.string().min(1, "Company name is required"),
+  totalFunding: z
+    .string()
+    .min(1, "Total funding is required")
+    .refine((val) => !isNaN(Number(val)), "Must be a valid number"),
+  currentRevenue: z
+    .string()
+    .min(1, "Current revenue is required")
+    .refine((val) => !isNaN(Number(val)), "Must be a valid number"),
+  marketSegment: z.string().min(1, "Market segment is required"),
+  stage: z.string().min(1, "Stage is required"),
   investorList: z.string().optional(),
   location: z.string().optional(),
-  website: z.string().url().optional().or(z.literal('')),
+  website: z.string().url().optional().or(z.literal("")),
   description: z.string().optional(),
 });
 
 const stages = [
-  'Pre-Seed',
-  'Seed',
-  'Series A',
-  'Series B',
-  'Series C',
-  'Series D+',
-  'Growth',
+  "Pre-Seed",
+  "Seed",
+  "Series A",
+  "Series B",
+  "Series C",
+  "Series D+",
+  "Growth",
 ];
 
 const marketSegments = [
-  'AI/ML',
-  'SaaS',
-  'Fintech',
-  'Healthcare',
-  'E-commerce',
-  'Enterprise',
-  'Consumer',
-  'Hardware',
-  'Blockchain',
-  'Other',
+  "AI/ML",
+  "SaaS",
+  "Fintech",
+  "Healthcare",
+  "E-commerce",
+  "Enterprise",
+  "Consumer",
+  "Hardware",
+  "Blockchain",
+  "Other",
 ];
 
 export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    totalFunding: '',
-    currentRevenue: '',
-    investorList: '',
-    marketSegment: '',
-    stage: '',
-    location: '',
-    website: '',
-    description: '',
+    name: "",
+    totalFunding: "",
+    currentRevenue: "",
+    investorList: "",
+    marketSegment: "",
+    stage: "",
+    location: "",
+    website: "",
+    description: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,44 +85,50 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
       const validatedData = companySchema.parse(formData);
 
       const result = await createCompany({
-        ...validatedData,
+        name: validatedData.name,
         totalFunding: parseFloat(validatedData.totalFunding),
         currentRevenue: parseFloat(validatedData.currentRevenue),
+        marketSegment: validatedData.marketSegment,
+        stage: validatedData.stage,
+        investorList: validatedData.investorList,
+        location: validatedData.location,
+        website: validatedData.website,
+        description: validatedData.description,
       });
 
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Company added successfully!',
+          title: "Success",
+          description: "Company added successfully!",
         });
         setFormData({
-          name: '',
-          totalFunding: '',
-          currentRevenue: '',
-          investorList: '',
-          marketSegment: '',
-          stage: '',
-          location: '',
-          website: '',
-          description: '',
+          name: "",
+          totalFunding: "",
+          currentRevenue: "",
+          investorList: "",
+          marketSegment: "",
+          stage: "",
+          location: "",
+          website: "",
+          description: "",
         });
         onSuccess?.();
       } else {
         throw new Error(result.error);
       }
     } catch (err) {
-      console.error('Error:', err);
-      let errorMessage = 'Failed to add company';
-      
+      console.error("Error:", err);
+      let errorMessage = "Failed to add company";
+
       if (err instanceof z.ZodError) {
-        errorMessage = err.errors.map(e => e.message).join(', ');
+        errorMessage = err.errors.map((e) => e.message).join(", ");
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
-      
+
       toast({
-        variant: 'destructive',
-        title: 'Error',
+        variant: "destructive",
+        title: "Error",
         description: errorMessage,
       });
     } finally {
@@ -121,7 +137,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -132,7 +148,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
           <Input
             id="name"
             value={formData.name}
-            onChange={(e) => handleChange('name', e.target.value)}
+            onChange={(e) => handleChange("name", e.target.value)}
             placeholder="Enter company name"
           />
         </div>
@@ -143,7 +159,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
             id="totalFunding"
             type="number"
             value={formData.totalFunding}
-            onChange={(e) => handleChange('totalFunding', e.target.value)}
+            onChange={(e) => handleChange("totalFunding", e.target.value)}
             placeholder="Enter total funding"
           />
         </div>
@@ -154,7 +170,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
             id="currentRevenue"
             type="number"
             value={formData.currentRevenue}
-            onChange={(e) => handleChange('currentRevenue', e.target.value)}
+            onChange={(e) => handleChange("currentRevenue", e.target.value)}
             placeholder="Enter current revenue"
           />
         </div>
@@ -163,7 +179,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
           <Label htmlFor="stage">Stage *</Label>
           <Select
             value={formData.stage}
-            onValueChange={(value) => handleChange('stage', value)}
+            onValueChange={(value) => handleChange("stage", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select stage" />
@@ -182,7 +198,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
           <Label htmlFor="marketSegment">Market Segment *</Label>
           <Select
             value={formData.marketSegment}
-            onValueChange={(value) => handleChange('marketSegment', value)}
+            onValueChange={(value) => handleChange("marketSegment", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select market segment" />
@@ -202,7 +218,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
           <Input
             id="location"
             value={formData.location}
-            onChange={(e) => handleChange('location', e.target.value)}
+            onChange={(e) => handleChange("location", e.target.value)}
             placeholder="Enter location"
           />
         </div>
@@ -213,7 +229,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
             id="website"
             type="url"
             value={formData.website}
-            onChange={(e) => handleChange('website', e.target.value)}
+            onChange={(e) => handleChange("website", e.target.value)}
             placeholder="Enter website URL"
           />
         </div>
@@ -223,7 +239,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
           <Input
             id="investorList"
             value={formData.investorList}
-            onChange={(e) => handleChange('investorList', e.target.value)}
+            onChange={(e) => handleChange("investorList", e.target.value)}
             placeholder="Enter investors (comma-separated)"
           />
         </div>
@@ -234,7 +250,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
         <Textarea
           id="description"
           value={formData.description}
-          onChange={(e) => handleChange('description', e.target.value)}
+          onChange={(e) => handleChange("description", e.target.value)}
           placeholder="Enter company description"
           className="min-h-[100px]"
         />
@@ -242,7 +258,7 @@ export function AddCompanyForm({ onSuccess }: AddCompanyFormProps) {
 
       <div className="flex justify-end gap-4">
         <Button type="submit" disabled={loading}>
-          {loading ? 'Adding Company...' : 'Add Company'}
+          {loading ? "Adding Company..." : "Add Company"}
         </Button>
       </div>
     </form>
