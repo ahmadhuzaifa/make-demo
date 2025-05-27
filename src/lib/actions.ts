@@ -28,6 +28,25 @@ export async function getCompanies() {
   }
 }
 
+export async function getCompany(id: string) {
+  try {
+    const company = await prisma.company.findUnique({
+      where: { id },
+      include: {
+        updates: true,
+      },
+    });
+    if (!company) throw new Error('Company not found');
+    return { success: true, data: company };
+  } catch (error) {
+    console.error('Error fetching company:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to fetch company'
+    };
+  }
+}
+
 export async function createCompany(data: any) {
   try {
     // Validate required fields
