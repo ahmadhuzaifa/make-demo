@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id            String   @id @default(cuid())
+  name          String
+  totalFunding  Float
+  currentRevenue Float
+  investorList  String[]
+  marketSegment String
+  stage         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Additional fields for tracking
+  revenueGrowth Float?
+  employees     Int?
+  location      String?
+  website       String?
+  description   String?
+  
+  // Relations
+  updates       CompanyUpdate[]
+  metrics       CompanyMetric[]
+  reports       Report[]
+}
+
+model CompanyUpdate {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  date        DateTime @default(now())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+}
+
+model CompanyMetric {
+  id          String   @id @default(cuid())
+  date        DateTime
+  revenue     Float
+  growth      Float
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  type        String   // e.g., "portfolio", "company", "market"
+  format      String   // e.g., "pdf", "excel", "presentation"
+  createdAt   DateTime @default(now())
+  companyId   String?  // Optional - for company-specific reports
+  company     Company? @relation(fields: [companyId], references: [id])
+}
+
+// For AI Analysis tracking
+model AIAnalysis {
+  id          String   @id @default(cuid())
+  query       String
+  response    String   @db.Text
+  companyName String?
+  createdAt   DateTime @default(now())
+  metadata    Json?    // Store additional context or data sources used
+}
